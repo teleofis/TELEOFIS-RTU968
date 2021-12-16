@@ -1,0 +1,48 @@
+Внимание: 
+Данный SDK предназначен для OpenWRT Chaos Calmer.
+Корректная сборка возможна на операционной системе 64 битной архитектуры.
+Перед использованием рекомендуется установить необходимые пакеты на Ваш компьютер:
+	sudo apt-get install subversion git g++ libncurses5-dev zlib1g-dev gawk libssl-dev unzip build-essential
+
+Пример сборки сервисного демона Helloworld и вызываемой пользователем программы helloworld_oneshot:
+1. Скачайте архив с SDK OpenWrt-SDK-mxs_gcc-4.8-linaro_uClibc-0.9.33.2_eabi.Linux-x86_64.tar.bz2
+2. Распакуйте архив командой
+	bzcat OpenWrt-SDK-mxs_gcc-4.8-linaro_uClibc-0.9.33.2_eabi.Linux-x86_64.tar.bz2 | tar -xvf -
+3. Перейдите в директорию SDK
+	cd OpenWrt-SDK-mxs_gcc-4.8-linaro_uClibc-0.9.33.2_eabi.Linux-x86_64/
+4. Создайте директорию для своего пакета, допустим:
+	mkdir -p package/helloworld
+5. Поместите в директорию файлы исходных кодов(находятся в прилагаемом архиве helloworld.tar)
+6. По команде make menuconfig заходим в меню и ставим в Ulilities галку напротив helloworld
+7. Собираем наш пакет:
+	make V=s
+8. Скомпилированные под OpenWRT приложения можно найти по пути:
+	.../build_dir/target-arm_arm926ej-s_uClibc-0.9.33.2_eabi/helloworld
+9. Готовый к установке пакет helloworld_123-321_mxs.ipk лежит в директории:
+	/bin/mxs/packages/base
+10.Копируем наш пакет на устройство с OpenWRT, например, через SCP:
+	scp bin/mxs/packages/base/helloworld_123-321_mxs.ipk root@192.168.88.1:/tmp/
+11.На устройстве с OpenWRT устанавливаем наш пакет:
+	root@TELEOFIS-RTU968:/# opkg install /tmp/helloworld_123-321_mxs.ipk
+12.Пробуем:
+
+--- helloworld_oneshot ---
+	root@TELEOFIS-RTU968:/# helloworld_oneshot
+	helloworld: Hi! This is oneshot HELLO
+
+--- Запускаем helloworld демон:
+	root@TELEOFIS-RTU968:/# etc/init.d/helloworld start
+
+--- За деятельностью демона можно проследить командой
+	logread -f | grep helloworld
+
+--- Остановить helloworld демон можно так же, как и запустить:
+	root@TELEOFIS-RTU968:/# etc/init.d/helloworld stop
+
+--- При перезагрузке все остается на своих местах
+
+*** Устранение неполадок ***
+Как правило, большинство проблем при сборке(чего-то не хватает, не видятся новые пакеты и т.д.)
+обусловлены либо ошибками в коде, либо отсутствием необходимых пакетов на Вашем ПК(например, с Убунту)
+При возникновении проблем попробуйте:
+	make distclean && make menuconfig

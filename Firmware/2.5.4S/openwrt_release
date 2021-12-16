@@ -1,0 +1,7 @@
+DISTRIB_ID='OpenWrt'
+DISTRIB_RELEASE=''
+DISTRIB_REVISION=''
+DISTRIB_CODENAME='chaos_calmer'
+DISTRIB_TARGET='mxs/generic'
+DISTRIB_DESCRIPTION='OpenWrt Chaos Calmer Build TELEOFIS 2.5.4S'
+DISTRIB_TAINTS='no-all busybox'
